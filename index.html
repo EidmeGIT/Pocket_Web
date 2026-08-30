@@ -11527,9 +11527,39 @@ async function openWithdrawalView(event) {
 
 
 
+
+// --- USER PROFILE PICTURE TOGGLE SCRIPT ---
+document.addEventListener("DOMContentLoaded", function () {
+    const profileBtn = document.querySelector(".user-profile-picture");
+    const profileImg = document.querySelector(".user-profile-picture img");
+
+    // Define the specific images to switch between
+    const image1 = "https://imgur.com/tfrfXDe.png";
+    const image2 = "https://imgur.com/q7GoNnb.png";
+
+    if (profileBtn && profileImg) {
+        profileBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Toggle between image1 and image2
+            if (profileImg.src === image1) {
+                profileImg.src = image2;
+            } else {
+                profileImg.src = image1;
+            }
+        });
+    }
+});
+
+
+
+
+
+
+	
+
 </script>
-
-
 </body>
 </html> 
 
