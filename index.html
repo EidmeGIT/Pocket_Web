@@ -11528,29 +11528,41 @@ async function openWithdrawalView(event) {
 
 
 
-// --- USER PROFILE PICTURE TOGGLE SCRIPT ---
-document.addEventListener("DOMContentLoaded", function () {
-    const profileBtn = document.querySelector(".user-profile-picture");
-    const profileImg = document.querySelector(".user-profile-picture img");
+// --- ISOLATED SAFE PROFILE PICTURE TOGGLE ---
+(function () {
+    const initProfileToggle = function () {
+        try {
+            const profileBtn = document.querySelector(".user-profile-picture");
+            const profileImg = document.querySelector(".user-profile-picture img");
 
-    // Define the specific images to switch between
-    const image1 = "https://imgur.com/tfrfXDe.png";
-    const image2 = "https://imgur.com/q7GoNnb.png";
+            if (!profileBtn || !profileImg) return;
 
-    if (profileBtn && profileImg) {
-        profileBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+            const images = [
+                "https://i.ibb.co.com/9HrLfHyx/Screenshot-2026-07-06-130123.png",
+                "https://i.ibb.co.com/BVWDYb8N/Screenshot-2026-07-06-125336.png"
+            ];
 
-            // Toggle between image1 and image2
-            if (profileImg.src === image1) {
-                profileImg.src = image2;
-            } else {
-                profileImg.src = image1;
-            }
-        });
+            let currentIndex = 0;
+
+            profileBtn.addEventListener("click", function (e) {
+                try {
+                    currentIndex = (currentIndex + 1) % images.length;
+                    profileImg.src = images[currentIndex];
+                } catch (err) {
+                    console.error("Profile toggle error:", err);
+                }
+            });
+        } catch (e) {
+            console.error("Profile toggle init error:", e);
+        }
+    };
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initProfileToggle);
+    } else {
+        initProfileToggle();
     }
-});
+})();
 
 
 
