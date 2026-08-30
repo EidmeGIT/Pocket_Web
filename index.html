@@ -11551,6 +11551,93 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+// ==========================================
+// 7-DAY SCHEDULE CONFIG (BD TIME RESET AT 23:59:59 - 92% FIXED PAYOUT)
+// ==========================================
+const DAILY_SCHEDULE_POCKET = {
+    0: { pair: 'CAD/CHF OTC', startPrice: 0.53700 }, // Sunday
+    1: { pair: 'GBP/USD OTC', startPrice: 1.43000 }, // Monday
+    2: { pair: 'EUR/USD OTC', startPrice: 1.15700 }, // Tuesday
+    3: { pair: 'AUD/CAD OTC', startPrice: 0.97800 }, // Wednesday
+    4: { pair: 'NZD/USD OTC', startPrice: 0.60500 }, // Thursday
+    5: { pair: 'AED/CNY OIC', startPrice: 1.85500 }, // Friday
+    6: { pair: 'AUD/USD OTC', startPrice: 0.69000 }  // Saturday
+};
+
+const FIXED_PAYOUT = 92;
+let currentDailyBasePrice = 1.25400;
+
+// Override price conversion to dynamically follow the daily start price
+internalToMonetary = function(internalPrice) {
+    const monetaryDiff = internalPrice * MONETARY_CONVERSION_RATIO;
+    return currentDailyBasePrice + monetaryDiff;
+};
+
+function getDhakaDayIndex() {
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const bdTime = new Date(utc + (3600000 * 6));
+    return bdTime.getDay();
+}
+
+function applyDailyPocketAsset() {
+    const dayIndex = getDhakaDayIndex();
+    const config = DAILY_SCHEDULE_POCKET[dayIndex];
+    if (!config) return;
+
+    // 1. Update Base Price & Symbol
+    currentDailyBasePrice = config.startPrice;
+    currentPairSymbol = config.pair;
+    currentPairPayoutPercentage = FIXED_PAYOUT;
+
+    // 2. Update Header Symbol UI
+    const symbolText = document.querySelector('.symbol-text');
+    if (symbolText) {
+        symbolText.textContent = config.pair;
+    }
+
+    // 3. Keep Payout Fixed at 92%
+    const payoutPercentDisplay = document.getElementById('payout-percent');
+    if (payoutPercentDisplay) {
+        payoutPercentDisplay.textContent = `+${FIXED_PAYOUT}%`;
+    }
+
+    if (typeof updatePanelFromGlobal === 'function') {
+        updatePanelFromGlobal();
+    }
+
+    if (typeof render === 'function') {
+        render();
+    }
+}
+
+function initDailyMidnightResetPocket() {
+    applyDailyPocketAsset();
+
+    let lastDay = getDhakaDayIndex();
+    setInterval(() => {
+        const currentDay = getDhakaDayIndex();
+        if (currentDay !== lastDay) {
+            lastDay = currentDay;
+            applyDailyPocketAsset();
+            
+            if (typeof render === 'function') render();
+        }
+    }, 1000);
+}
+
+// Auto-run on startup
+window.addEventListener('DOMContentLoaded', initDailyMidnightResetPocket);
+initDailyMidnightResetPocket();
+
+	
+
+
+
+
+	
+
+
 
 </script>
 </body>
