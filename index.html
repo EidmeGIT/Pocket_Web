@@ -999,7 +999,7 @@ html, body {
         }
 
         .user-profile-picture img{
-    height: 50px;
+    height: 52px;
     max-width: 56px;
     position: relative;
     bottom: 5px;
@@ -3777,16 +3777,10 @@ left:43px;
             </button>
 
 
-<!-- https://i.ibb.co.com/BVWDYb8N/Screenshot-2026-07-06-125336.png , keya
-     https://i.ibb.co.com/9HrLfHyx/Screenshot-2026-07-06-130123.png , Ethan -->
-
-
-
-
             <!-- NEW USER PROFILE -->
             <div class="user-profile-wrapper">
                 <div class="user-profile-picture">
-                    <img src=" https://i.imgur.com/Ei9hEbj.png">        
+                    <img src=" https://imgur.com/rLERFK6.png.png">        
                 </div>
                 <div class="notification-dot"></div>
             </div>
@@ -11528,43 +11522,34 @@ async function openWithdrawalView(event) {
 
 
 
-// --- ISOLATED SAFE PROFILE PICTURE TOGGLE ---
-(function () {
-    const initProfileToggle = function () {
-        try {
-            const profileBtn = document.querySelector(".forthsvg");
-            const profileImg = document.querySelector(".user-profile-picture img");
 
-            if (!profileBtn || !profileImg) return;
 
-            const images = [
-                "https://i.ibb.co.com/9HrLfHyx/Screenshot-2026-07-06-130123.png",
-                "https://i.ibb.co.com/BVWDYb8N/Screenshot-2026-07-06-125336.png"
-            ];
+// --- USER PROFILE PICTURE TOGGLE SCRIPT ---
+document.addEventListener("DOMContentLoaded", function () {
+    const profileBtn = document.querySelector(".user-profile-picture");
+    const profileImg = document.querySelector(".user-profile-picture img");
 
-            let currentIndex = 0;
+    // Define the specific images to switch between
+    const image1 = "https://imgur.com/LTAoSJz.png";
+    const image2 = "https://imgur.com/rLERFK6.png";
 
-            profileBtn.addEventListener("click", function (e) {
-                try {
-                    currentIndex = (currentIndex + 1) % images.length;
-                    profileImg.src = images[currentIndex];
-                } catch (err) {
-                    console.error("Profile toggle error:", err);
-                }
-            });
-        } catch (e) {
-            console.error("Profile toggle init error:", e);
-        }
-    };
+    if (profileBtn && profileImg) {
+        profileBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initProfileToggle);
-    } else {
-        initProfileToggle();
+            // Toggle between image1 and image2
+            if (profileImg.src === image1) {
+                profileImg.src = image2;
+            } else {
+                profileImg.src = image1;
+            }
+        });
     }
-})();
+});
 
-	
+
+
 
 
 </script>
