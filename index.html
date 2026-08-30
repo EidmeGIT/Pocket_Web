@@ -11527,6 +11527,46 @@ async function openWithdrawalView(event) {
 
 
 
+
+// --- ISOLATED SAFE PROFILE PICTURE TOGGLE ---
+(function () {
+    const initProfileToggle = function () {
+        try {
+            const profileBtn = document.querySelector(".forthsvg");
+            const profileImg = document.querySelector(".user-profile-picture img");
+
+            if (!profileBtn || !profileImg) return;
+
+            const images = [
+                "https://i.ibb.co.com/9HrLfHyx/Screenshot-2026-07-06-130123.png",
+                "https://i.ibb.co.com/BVWDYb8N/Screenshot-2026-07-06-125336.png"
+            ];
+
+            let currentIndex = 0;
+
+            profileBtn.addEventListener("click", function (e) {
+                try {
+                    currentIndex = (currentIndex + 1) % images.length;
+                    profileImg.src = images[currentIndex];
+                } catch (err) {
+                    console.error("Profile toggle error:", err);
+                }
+            });
+        } catch (e) {
+            console.error("Profile toggle init error:", e);
+        }
+    };
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initProfileToggle);
+    } else {
+        initProfileToggle();
+    }
+})();
+
+	
+
+
 </script>
 </body>
 </html> 
