@@ -368,6 +368,7 @@
 
 
 
+	  
 
 
 <!DOCTYPE html>
@@ -642,8 +643,8 @@ html, body {
     left: 0 !important;
     top: 0 !important;
     height: 100% !important;
-    background: linear-gradient(90deg, #14461a, #32ac41) !important;
-    transition: width 0.5s ease-in-out !important;
+    background: linear-gradient(90deg, #32ac41, #14461a) !important;
+    transition: width 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
 }
 
 .mainright1 .sm-fill-bottom {
@@ -651,7 +652,7 @@ html, body {
     top: 0 !important;
     height: 100% !important;
     background: linear-gradient(90deg, #8d201a, #f3382c) !important;
-    transition: width 0.5s ease-in-out !important;
+    transition: width 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
 }
 
 .mainright1 #smIndicator {
@@ -665,7 +666,7 @@ html, body {
     border-radius: 3px !important;
     box-shadow: 0 0 6px rgba(0, 153, 250, 0.8) !important;
     z-index: 10 !important;
-    transition: left 0.5s ease-in-out !important;
+    transition: left 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
 }
 
 #smTopLabel, #smBottomLabel {
@@ -6479,13 +6480,7 @@ z"/>
                     <div class="tp-input-row-wrapper" id="amount-container">
                         <label class="tp-label-row" id="amount-label">Amount</label>
                         <div class="tp-input-wrapper" id="amount-trigger">
-                            <input type="text" id="amount-input" value="1" class="tp-input-field"
-  inputmode="numeric"
-  pattern="[0-9]*"
-  onkeydown="return /^[0-9]$/.test(event.key) || 
-    ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.key)"
-  oninput="this.value = this.value.replace(/[^0-9]/g,'')"
->
+                            <input type="text" id="amount-input" value="1" class="tp-input-field">
 
                             <button class="tp-input-btn" id="amount-type-toggle">
     <span id="amount-icon" style="display:flex; align-items:center; justify-content:center; width: 100%; height: 100%;">
@@ -7675,7 +7670,7 @@ function checkPresetMatch() {
 
 
             // State for Amount
-            let currentTradeAmount = [10, 15, 20, 25, 30][Math.floor(Math.random() * 5)]; // Always stores the actual dollar value
+            let currentTradeAmount = Math.floor(Math.random() * 13) * 5 + 20;
             let isPercentageMode = false;
             const MAX_GLOBAL_LIMIT = 20000;
 
@@ -8698,26 +8693,25 @@ function animateValue(obj, start, end, duration) {
 
 // === UPDATE SENTIMENT METER (Thermometer + Bounce + Smooth Count) ---
 function updateSentiment() {
-    const newBuyPct = Math.floor(Math.random() * 100);
+    // Set your minimum and maximum percentage limits here
+    const MIN_LIMIT = 10; // Lowest percentage it can ever reach
+    const MAX_LIMIT = 90; // Highest percentage it can ever reach
     
-    // Animate the numbers
+    // Generate a value strictly within [MIN_LIMIT, MAX_LIMIT]
+    const newBuyPct = Math.floor(Math.random() * (MAX_LIMIT - MIN_LIMIT + 1)) + MIN_LIMIT;
+    const newSellPct = 100 - newBuyPct;
+    
+    // Animate the label numbers within the new limits
     animateValue(smTopLabel, currentSentimentBuy, newBuyPct, 400);
-    animateValue(smBottomLabel, 100 - currentSentimentBuy, 100 - newBuyPct, 400);
+    animateValue(smBottomLabel, 100 - currentSentimentBuy, newSellPct, 400);
     
     // Update global state
-    currentSentimentSentimentBuy = newBuyPct;
+    currentSentimentBuy = newBuyPct;
     
-    const topPct = 100 - newBuyPct;
-    
-    // Clamp the indicator position so it doesn't cross the line
-    // 2% min, 98% max
-    const displayTop = Math.max(2, Math.min(98, topPct));
-    
-    // CSS transitions handle the bar and indicator movement smoothness
-    smIndicator.style.left = (100 - displayTop) + "%";
-    
-    smFillTop.style.height = topPct + "%";
-    smFillBottom.style.height = (100 - topPct) + "%";
+    // Apply positions
+    smIndicator.style.left = newBuyPct + "%";
+    smFillTop.style.width = newBuyPct + "%";
+    smFillBottom.style.width = newSellPct + "%";
 }
 
 // --- NEW CANVAS DRAWING FUNCTIONS ---
@@ -11642,6 +11636,7 @@ initDailyMidnightResetPocket();
 </script>
 </body>
 </html> 
+
 
 
 
